@@ -12,8 +12,9 @@ type Event struct {
 }
 
 const (
-	TypePostCreated    = "PostCreated"
-	TypeCommentCreated = "CommentCreated"
+	TypePostCreated      = "PostCreated"
+	TypeCommentCreated   = "CommentCreated"
+	TypeCommentModerated = "CommentModerated"
 )
 
 func EmitEvent(eventType string, data any) error {

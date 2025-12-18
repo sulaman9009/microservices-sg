@@ -57,6 +57,7 @@ func run(logger *zerolog.Logger) error {
 		newComment := domain.Comment{
 			Id:      rand.String(),
 			Content: req.Content,
+			Status:  "pending",
 		}
 		postId := c.Param("id")
 		if comments, exists := comment_store[postId]; exists {

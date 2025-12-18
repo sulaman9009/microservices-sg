@@ -33,7 +33,7 @@ func run(logger *zerolog.Logger) error {
 	query_store := map[string]*domain.Post{}
 
 	e.GET("/posts", func(c echo.Context) error {
-		var posts []*domain.Post
+		posts := []*domain.Post{}
 		for _, v := range query_store {
 			posts = append(posts, v)
 		}
@@ -58,6 +58,7 @@ func run(logger *zerolog.Logger) error {
 				post.Comments = append(post.Comments, &domain.Comment{
 					Id:      data.Id,
 					Content: data.Content,
+					Status:  data.Status,
 				})
 			} else {
 				return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("post %s does not exist", data.PostId))
