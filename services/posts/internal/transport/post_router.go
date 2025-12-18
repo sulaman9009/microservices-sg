@@ -32,7 +32,6 @@ func (s *server) createPost(c echo.Context) error {
 		Title: req.Title,
 	}
 	s.post_store = append(s.post_store, post)
-	fmt.Println("emitting post created event...")
 	if err := events.EmitEvent(events.TypePostCreated, post); err != nil {
 		return echo.NewHTTPError(
 			http.StatusInternalServerError,

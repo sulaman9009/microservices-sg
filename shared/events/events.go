@@ -7,8 +7,8 @@ import (
 )
 
 type Event struct {
-	Type string `json:"type"`
-	Data any    `json:"data"`
+	Type string          `json:"type"`
+	Data json.RawMessage `json:"data"`
 }
 
 const (
@@ -17,9 +17,13 @@ const (
 )
 
 func EmitEvent(eventType string, data any) error {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
 	event := Event{
 		Type: eventType,
-		Data: data,
+		Data: jsonData,
 	}
 	body, err := json.Marshal(event)
 	if err != nil {
