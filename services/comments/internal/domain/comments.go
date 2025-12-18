@@ -12,3 +12,8 @@ type CreateCommentReq struct {
 type GetCommentsResp struct {
 	Comments []*Comment `json:"comments"`
 }
+
+type CommentWithPostId struct {
+	PostId string `json:"postId"`
+	Comment
+}

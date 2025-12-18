@@ -1,11 +1,13 @@
 package transport
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/sulaman9009/microservices-sg/services/posts/internal/domain"
+	"github.com/sulaman9009/microservices-sg/shared/events"
 )
 
 func (s *server) getPosts(c echo.Context) error {
@@ -30,5 +32,12 @@ func (s *server) createPost(c echo.Context) error {
 		Title: req.Title,
 	}
 	s.post_store = append(s.post_store, post)
+	fmt.Println("emitting post created event...")
+	if err := events.EmitEvent(events.TypePostCreated, post); err != nil {
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			fmt.Sprintf("failed to send post created event: %s", err),
+		)
+	}
 	return c.JSON(http.StatusCreated, post)
 }

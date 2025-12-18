@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 	"github.com/sulaman9009/microservices-sg/services/comments/internal/domain"
+	"github.com/sulaman9009/microservices-sg/shared/events"
 	"github.com/sulaman9009/microservices-sg/shared/logger"
 )
 
@@ -44,7 +45,6 @@ func run(logger *zerolog.Logger) error {
 	})
 
 	e.POST("/posts/:id/comment", func(c echo.Context) error {
-		fmt.Println("called")
 		var req domain.CreateCommentReq
 		if err := c.Bind(&req); err != nil {
 			return err
@@ -64,7 +64,25 @@ func run(logger *zerolog.Logger) error {
 		} else {
 			comment_store[postId] = []*domain.Comment{&newComment}
 		}
+		if err := events.EmitEvent(events.TypeCommentCreated, domain.CommentWithPostId{
+			PostId:  postId,
+			Comment: newComment,
+		}); err != nil {
+			return echo.NewHTTPError(
+				http.StatusInternalServerError,
+				fmt.Sprintf("failed to send comment created event: %s", err),
+			)
+		}
 		return c.JSON(http.StatusCreated, newComment)
+	})
+
+	e.POST("/events", func(c echo.Context) error {
+		var ev events.Event
+		if err := c.Bind(&ev); err != nil {
+			return err
+		}
+		fmt.Printf("comment svc received event %s\n", ev.Type)
+		return nil
 	})
 
 	e.GET("/ping", func(c echo.Context) error {
