@@ -59,6 +59,8 @@ func run(logger *zerolog.Logger) error {
 					Id:      data.Id,
 					Content: data.Content,
 				})
+			} else {
+				return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("post %s does not exist", data.PostId))
 			}
 		case events.TypePostCreated:
 			var data domain.PostCreatedEventData

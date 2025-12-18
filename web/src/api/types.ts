@@ -17,3 +17,10 @@ export type comment = {
 export type comments = {
 	comments: comment[];
 };
+
+// query api types
+export type queryPost = post & comments;
+
+export type queryPosts = {
+	posts: queryPost[];
+};

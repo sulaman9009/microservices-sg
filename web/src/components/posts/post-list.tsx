@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { getPosts } from "../../api/posts";
-import type { post } from "../../api/types";
+import type { queryPost } from "../../api/types";
 import Post from "./post";
+import { getQueryPosts } from "../../api/query";
 
 function PostList() {
 	const [loading, setLoading] = useState(true);
-	const [posts, setPosts] = useState<post[]>([]);
+	const [posts, setPosts] = useState<queryPost[]>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const posts = await getPosts();
+				const posts = await getQueryPosts();
 				setPosts(posts.posts);
 			} catch (error) {
 				console.error("failed to fetch posts", error);

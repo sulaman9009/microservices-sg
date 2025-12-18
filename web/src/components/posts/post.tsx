@@ -1,9 +1,9 @@
-import type { post } from "../../api/types";
+import type { queryPost } from "../../api/types";
 import Comments from "../comments/comments";
 import CreateCommentForm from "../comments/create-comment-form";
 
 type props = {
-	post: post;
+	post: queryPost;
 };
 
 function Post({ post }: props) {
@@ -14,7 +14,7 @@ function Post({ post }: props) {
 			<CreateCommentForm postId={post.id} />
 			<hr className="my-3" />
 			<p className="mb-2">Comments:</p>
-			<Comments postId={post.id} />
+			<Comments comments={post.comments} />
 		</div>
 	);
 }
