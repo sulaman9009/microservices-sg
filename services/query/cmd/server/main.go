@@ -73,8 +73,21 @@ func run(logger *zerolog.Logger) error {
 				Title:    data.Title,
 				Comments: []*domain.Comment{},
 			}
-		default:
-			fmt.Println("unknown event:", ev.Type)
+		case events.TypeCommentUpdated:
+			var data domain.CommentUpdatedEvent
+			if err := json.Unmarshal(ev.Data, &data); err != nil {
+				return echo.NewHTTPError(http.StatusBadRequest, "invalid comment updated event")
+			}
+			post, ok := query_store[data.PostId]
+			if !ok {
+				err := fmt.Sprintf("could not find post %s for updated comment", data.PostId)
+				return echo.NewHTTPError(http.StatusInternalServerError, err)
+			}
+			for _, comment := range post.Comments {
+				if comment.Id == data.Id {
+					comment.Status = data.Status
+				}
+			}
 		}
 		return nil
 	})

@@ -15,6 +15,7 @@ const (
 	TypePostCreated      = "PostCreated"
 	TypeCommentCreated   = "CommentCreated"
 	TypeCommentModerated = "CommentModerated"
+	TypeCommentUpdated   = "CommentUpdated"
 )
 
 func EmitEvent(eventType string, data any) error {

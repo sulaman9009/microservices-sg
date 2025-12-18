@@ -11,3 +11,7 @@ type CommentCreatedEventData struct {
 	Content string
 	Status  string
 }
+
+type CommentUpdatedEvent struct {
+	CommentCreatedEventData
+}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -83,6 +84,23 @@ func run(logger *zerolog.Logger) error {
 			return err
 		}
 		fmt.Printf("comment svc received event %s\n", ev.Type)
+		switch ev.Type {
+		case events.TypeCommentModerated:
+			var data domain.CommentModeratedEventData
+			if err := json.Unmarshal(ev.Data, &data); err != nil {
+				return echo.NewHTTPError(http.StatusBadRequest, "invalid comment moderated event")
+			}
+			var updateComment *domain.Comment
+			for _, comment := range comment_store[data.PostId] {
+				if comment.Id == data.Id {
+					updateComment = comment
+					updateComment.Status = data.Status
+				}
+			}
+			if err := events.EmitEvent(events.TypeCommentUpdated, data); err != nil {
+				return err
+			}
+		}
 		return nil
 	})
 

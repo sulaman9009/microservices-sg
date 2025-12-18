@@ -12,6 +12,7 @@ export type posts = {
 export type comment = {
 	id: string;
 	content: string;
+	status: "pending" | "approved" | "rejected";
 };
 
 export type comments = {
