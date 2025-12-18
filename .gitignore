@@ -4,6 +4,7 @@
 
 # Custom
 _template
+**/tmp
 
 # Binaries for programs and plugins
 *.exe
